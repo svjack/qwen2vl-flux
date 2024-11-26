@@ -13,20 +13,11 @@ from flux.pipeline_flux_controlnet_img2img import FluxControlNetImg2ImgPipeline
 from flux.controlnet_flux import FluxMultiControlNetModel
 from flux.pipeline_flux_controlnet_inpainting import FluxControlNetInpaintPipeline
 
-from controlnet_aux import AnylineDetector
-from depth_anything_v2.dpt import DepthAnythingV2
-from sam2.build_sam import build_sam2
-from sam2.sam2_image_predictor import SAM2ImagePredictor
-
-from diffusers.pipelines.stable_diffusion.safety_checker import (
-    StableDiffusionSafetyChecker,
-)
 from qwen2_vl.modeling_qwen2_vl import Qwen2VLSimplifiedModel
 import os
 import cv2
 import numpy as np
 import math
-from optimum.quanto import freeze, qfloat8, quantize
 
 def get_model_path(model_name):
     """Get the full path for a model based on the checkpoints directory."""
@@ -84,6 +75,11 @@ class FluxModel:
         self.dtype = torch.bfloat16
         if required_features is None:
             required_features = []
+
+        self._line_detector_imported = False
+        self._depth_model_imported = False
+        self._sam_imported = False
+        self._turbo_imported = False
 
         # Initialize base models (always required)
         self._init_base_models()
@@ -156,6 +152,10 @@ class FluxModel:
 
     def _init_depth_model(self):
         """Initialize Depth Anything V2 model"""
+        if not self._depth_model_imported:
+            from depth_anything_v2.dpt import DepthAnythingV2
+            self._depth_model_imported = True
+
         self.depth_model = DepthAnythingV2(
             encoder='vitl',
             features=256,
@@ -168,6 +168,10 @@ class FluxModel:
 
     def _init_line_detector(self):
         """Initialize line detection model"""
+        if not self._line_detector_imported:
+            from controlnet_aux import AnylineDetector
+            self._line_detector_imported = True
+
         self.anyline = AnylineDetector.from_pretrained(
             MODEL_PATHS['anyline']['path'],
             filename=MODEL_PATHS['anyline']['weights']
@@ -176,6 +180,11 @@ class FluxModel:
 
     def _init_sam(self):
         """Initialize SAM2 model"""
+        if not self._sam_imported:
+            from sam2.build_sam import build_sam2
+            from sam2.sam2_image_predictor import SAM2ImagePredictor
+            self._sam_imported = True
+
         sam2_checkpoint = os.path.join(MODEL_PATHS['sam2']['path'], 
                                      MODEL_PATHS['sam2']['weights'])
         model_cfg = os.path.join(MODEL_PATHS['sam2']['path'], 
@@ -185,6 +194,10 @@ class FluxModel:
 
     def _enable_turbo(self):
         """Enable turbo mode for faster inference"""
+        if not self._turbo_imported:
+            from optimum.quanto import freeze, qfloat8, quantize
+            self._turbo_imported = True
+
         quantize(
             self.transformer,
             weights=qfloat8,
@@ -383,15 +396,11 @@ class FluxModel:
         pooled_prompt_embeds = self.compute_text_embeddings(prompt="")
         t5_prompt_embeds = None
         if prompt != "":
-            #self.text_encoder_two = T5EncoderModel.from_pretrained("/src/models/flux", subfolder="text_encoder_2")
-            #self.tokenizer_two = T5TokenizerFast.from_pretrained("/src/models/flux", subfolder="tokenizer_2")
-            #self.text_encoder_two.requires_grad_(False).to(self.dtype).to(self.device)
-
-            self.qwen2vl_processor = AutoProcessor.from_pretrained("/src/models/qwen2-vl", min_pixels=256*28*28, max_pixels=256*28*28)
+            self.qwen2vl_processor = AutoProcessor.from_pretrained(MODEL_PATHS['qwen2vl'], min_pixels=256*28*28, max_pixels=256*28*28)
             t5_prompt_embeds = self.compute_t5_text_embeddings(prompt=prompt, device=self.device)
             t5_prompt_embeds = self.t5_context_embedder(t5_prompt_embeds)
         else:
-            self.qwen2vl_processor = AutoProcessor.from_pretrained("/src/models/qwen2-vl", min_pixels=512*28*28, max_pixels=512*28*28)
+            self.qwen2vl_processor = AutoProcessor.from_pretrained(MODEL_PATHS['qwen2vl'], min_pixels=512*28*28, max_pixels=512*28*28)
 
         qwen2_hidden_state_a, image_grid_thw_a = self.process_image(input_image_a)
         # 只有当所有注意力参数都被提供时，才应用注意力机制

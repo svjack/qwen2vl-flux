@@ -47,7 +47,7 @@ Key architectural features:
 - Python 3.8 or higher
 - CUDA compatible GPU (recommended)
 - PyTorch 2.4.1 or higher
-- 8GB+ GPU memory (16GB+ recommended)
+- 48GB+ GPU memory
 
 ### Environment Setup
 
@@ -127,7 +127,7 @@ python main.py --mode <mode> --input_image <path> [additional options]
 - `--image_count`: Number of images to generate (default: 1)
 - `--aspect_ratio`: Output image ratio (`1:1`/`16:9`/`9:16`/`2.4:1`/`3:4`/`4:3`)
 - `--steps`: Number of inference steps (default: 28)
-- `--guidance_scale`: Generation guidance scale (default: 7.5)
+- `--guidance_scale`: Generation guidance scale (default: 3.5)
 - `--device`: Computing device (`cuda`/`cpu`)
 
 ### Environment Configuration
@@ -170,7 +170,7 @@ python main.py --mode variation \
 python main.py --mode img2img \
                --input_image source.jpg \
                --reference_image target.jpg \
-               --prompt "Transform the style" \
+               --prompt "xxxxxxxxxxxx" \
                --denoise_strength 0.75
 ```
 
@@ -190,7 +190,7 @@ python main.py --mode controlnet \
                --depth_mode \
                --line_strength 0.4 \
                --depth_strength 0.2 \
-               --prompt "Generate with structural guidance"
+               --prompt "xxxxxxxxxxxxxxxxxxxxx"
 ```
 
 5. **Custom Model Path Configuration**
@@ -199,7 +199,7 @@ python main.py --mode controlnet \
 CHECKPOINT_DIR=/path/to/models python main.py \
                --mode variation \
                --input_image image.jpg \
-               --prompt "Generate creative variation"
+               --prompt "xxxxxxxxxxxxxxxxxxxxxxxxx"
 ```
 
 6. **Memory-Optimized ControlNet Usage**
@@ -209,14 +209,14 @@ python main.py --mode controlnet \
                --input_image image.jpg \
                --depth_mode \
                --depth_strength 0.3 \
-               --prompt "Generate with depth guidance"
+               --prompt "xxxxxxxxxxxxxxxxxxxxxxxx"
 
 # Only loads line detection without depth model
 python main.py --mode controlnet \
                --input_image image.jpg \
                --line_mode \
                --line_strength 0.4 \
-               --prompt "Generate with line guidance"
+               --prompt "xxxxxxxxxxxxxxxxxxxxxxxxxxx"
 ```
 
 7. **Focused Generation with Attention**
@@ -226,7 +226,7 @@ python main.py --mode variation \
                --center_x 0.5 \
                --center_y 0.5 \
                --radius 0.3 \
-               --prompt "Focus on the central object"
+               --prompt "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 ```
 
 ### Advanced Options
