@@ -103,10 +103,10 @@ b) For ControlNet features (optional):
 Modify the following paths in `model.py` to match your setup:
 ```python
 FLUX_MODEL_PATH = "/checkpoints/flux"
-CONTROLNET_MODEL_PATH = "/checkpoints/flux"
+CONTROLNET_MODEL_PATH = "/checkpoints/controlnet"
 QWEN2VL_MODEL_PATH = "/checkpoints/qwen2-vl"
 DEPTHANYTHING_MODEL_PATH = "/checkpoints/depth-anything-v2"
-MISTOLINE_MODEL_PATH = "/checkpoints/mistoline"
+MISTOLINE_MODEL_PATH = "/checkpoints/anyline"
 SAM2_MODEL_PATH = "/checkpoints/segment-anything-v2"
 ```
 
