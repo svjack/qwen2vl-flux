@@ -14,14 +14,16 @@ python app.py
 ```
 
 ## Example 
-
+  - Source
   <div style="display: flex; flex-direction: column; align-items: center;">
     <img src="https://github.com/user-attachments/assets/d061ddbf-f8af-4b35-85f7-05777adfa2ae"  style="max-width: 100%;">
   </div>
-
+  
+  - Target
+  
   <div style="display: flex; flex-direction: column; align-items: center;">
   <img src="https://github.com/user-attachments/assets/1a26e620-e597-4c9b-b9b2-a16c9d2f265b"  style="max-width: 100%;">
-</div>
+  </div>
 <p><strong>Prompt:</strong> boy wear glasses
  </p>
 
