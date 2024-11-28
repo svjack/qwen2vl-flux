@@ -6,6 +6,29 @@ This implementation uses Qwen2VL as the vision-language model for enhanced multi
 
 For technical details, please refer to our [technical report](technical-report.pdf).
 
+## Installtion 
+```bash
+sudo apt-get update && sudo apt-get install git-lfs ffmpeg cbm
+git clone https://huggingface.co/spaces/svjack/qwen2vl-flux-mini-demo && cd qwen2vl-flux-mini-demo && pip install -r requirements.txt
+python app.py
+```
+
+## Example 
+
+  <div style="display: flex; flex-direction: column; align-items: center;">
+    <img src="https://github.com/user-attachments/assets/d061ddbf-f8af-4b35-85f7-05777adfa2ae"  style="max-width: 100%;">
+  </div>
+
+<div style="margin-bottom: 10px;">
+  <img src="https://github.com/user-attachments/assets/1a26e620-e597-4c9b-b9b2-a16c9d2f265b"  style="max-width: 100%;">
+</div>
+<p><strong>Prompt:</strong> boy wear glasses
+ </p>
+
+<br>
+
+
+
 ## Model Architecture
 
 The Flux model enhances Stable Diffusion by replacing the traditional text encoder with a vision-language model (Qwen2VL), enabling superior multimodal understanding and generation:
